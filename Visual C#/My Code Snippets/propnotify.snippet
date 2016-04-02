@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>propnotify</Title>
+            <Shortcut>propnotify</Shortcut>
+            <Description>INotifyPropertyChanged を実装するオブジェクトのプロパティを定義するコード スニペット</Description>
+            <Author>S. A.</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>type</ID>
+                    <ToolTip>プロパティ型</ToolTip>
+                    <Default>int</Default>
+                </Literal>
+                <Literal>
+                    <ID>property</ID>
+                    <ToolTip>プロパティ名</ToolTip>
+                    <Default>MyProperty</Default>
+                </Literal>
+                <Literal>
+                    <ID>field</ID>
+                    <ToolTip>このプロパティのバッキング変数</ToolTip>
+                    <Default>myVar</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="CSharp">
+                <![CDATA[private $type$ $field$;
+
+    public $type$ $property$
+    {
+        get
+        {
+            return $field$;
+        }
+        set
+        {
+            if ($field$ != value)
+            {
+                $field$ = value;
+                OnPropertyChanged("$property$");
+            }
+        }
+    }
+    $end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>onpropchanged</Title>
+            <Shortcut>onpropchanged</Shortcut>
+            <Description>INotifyPropertyChanged メンバーの実装と、イベント発生メソッドの定義を行うコード スニペット</Description>
+            <Author>S. A.</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Code Language="CSharp">
+                <![CDATA[#region INotifyPropertyChanged メンバー
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        ValidatePropertyName(propertyName);
+        var handler = PropertyChanged;
+        if (handler != null)
+            handler(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    [Conditional("DEBUG")]
+    private void ValidatePropertyName(string propertyName)
+    {
+        var type = GetType();
+        var property = type.GetProperty(propertyName);
+        Debug.Assert(property != null);
+    }
+
+    #endregion$end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>
